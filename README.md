@@ -1,7 +1,9 @@
 # ansible-lamp-wordpress
 
 Files for the OpenWebinars ansible course: https://openwebinars.net/cursos/ansible/
+
 Forked from: https://github.com/MarioPerezEsteso/ansible-lamp-wordpress
+
 
 Modifications for Ubuntu 18 by hfiel
 
