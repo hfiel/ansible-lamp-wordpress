@@ -1,5 +1,12 @@
 ---
-
+#db settings to be used by MySQL and WordPress
 dbname: "wordpressdb"
 dbuser: "wpuser"
-dbpasswd: "wpuser"
+dbpass: "wpuser"
+#TODO: dynamically get the dbhost from the inventory files for ALL the playbooks
+# this does not work in the webservers playbook because 'dbserver' is defined in the dbservers inventory
+# How do we use an inventory (a) fact from a different inventory's (b) playbook?
+#dbhost: "{{ hostvars['dbserver'].ansible_host }}"
+dbhost: "192.168.0.104"
+
+...

@@ -1,13 +1,20 @@
 ---
 
+mysql_conf_dir: "/etc/mysql/"
+
 mysql_port: 3306
 mysql_bind_address: "0.0.0.0"
-mysql_root_db_pass: root
+mysql_root_db_pass: roottoor
 
-mysql_db: 
-  - name: wordpressdb
+
+# The db settings are defined in the group_vars/all.yml file, as they are needed
+# by both the mysql and wordpress roles
+mysql_db:
+  - name: "{{ dbname }}"
 
 mysql_users:
-  - name: wpuser
-    pass: wpuser
-    priv: "*.*:ALL"
+  - name: "{{ dbuser }}"
+    pass: "{{ dbpass }}"
+    priv: "{{ dbname }}.*:ALL"
+
+...

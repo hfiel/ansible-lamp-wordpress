@@ -1,8 +1,27 @@
 ---
-haproxy_socket: /var/lib/haproxy/stats
+haproxy_socket: /run/haproxy/admin.sock
 haproxy_chroot: /var/lib/haproxy
 haproxy_user: haproxy
 haproxy_group: haproxy
+haproxy_log_device: /dev/log
+haproxy_log_0: local0
+haproxy_log_1: 'local1 notice'
+haproxy_mode: daemon
+haproxy_stats_timeout: 30s
+
+#set haproxy_stats_enabled to false to disable stats
+haproxy_stats_enabled: true
+haproxy_stats_url: /haproxystats?stats
+haproxy_stats_user: hapstatsuser
+haproxy_stats_pass: haproxyshowmestats
+haproxy_stats_port: 1937
+
+
+# SSL settings
+haproxy_ssl_certs: /etc/ssl/certs
+haproxy_ssl_private: /etc/ssl/private
+haproxy_ssl_ciphers: 'ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:RSA+AESGCM:RSA+AES:!aNULL:!MD5:!DSS'
+haproxy_ssl_options: no-sslv3
 
 # Frontend settings.
 haproxy_frontend_name: 'hafrontend'
@@ -15,10 +34,13 @@ haproxy_backend_name: 'habackend'
 haproxy_backend_mode: 'http'
 haproxy_backend_balance_method: 'roundrobin'
 haproxy_backend_httpchk: 'HEAD / HTTP/1.1\r\nHost:localhost'
+haproxy_backend_check_port: 80
 
 # List of backend servers.
+#TODO: dynamically get the IP addess from the inventory file
 haproxy_backend_servers:
-  - name: webserver-one
-    address: 192.168.33.12:80
-  - name: webserver-two
-    address: 192.168.33.13:80
+  - name: webserver-1
+    address: 192.168.0.102:80
+  - name: webserver-2
+    address: 192.168.0.103:80
+...

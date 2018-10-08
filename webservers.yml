@@ -1,7 +1,8 @@
 ---
-- name: Web servers playbook
+- name: Webservers playbook
   hosts: webservers
   roles:
     - role: apache
     - role: php
     - role: wordpress
+...

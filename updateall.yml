@@ -1,0 +1,9 @@
+---
+- hosts: all
+  order: inventory
+  #become: yes
+  tasks:
+  - name: "Update all"
+    apt: name="*" state=latest update_cache=yes force_apt_get=true
+
+...

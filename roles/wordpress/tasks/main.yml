@@ -1,19 +1,29 @@
 ---
 
-- name: Install unzip package
-  apt: name=unzip state=installed
+- name: Install unzip
+  apt:
+    name: unzip
+    state: latest
 
-- name: Check if Wordpress has been previously downloaded
-  stat: path="{{ wp_download_path }}"
-  register: wp_zipped
+- name: check if wp is downloaded
+  stat:
+    path: "{{ wp_download_path }}"
+  register: wp_download_present
 
-- name: Download Wordpress
-  get_url: url="{{ wp_url }}" dest="{{ wp_download_path }}"
-  when: wp_zipped.stat.exists == False
+- name: download wp
+  get_url:
+    url: "{{ wp_download_url }}"
+    dest: "{{ wp_download_path }}"
+  when: wp_download_present.stat.exists == False
 
-- name: Unzip Wordpress
-  unarchive: src="{{ wp_download_path }}" dest="{{ wp_webserver_path }}" copy=no
-  # copy=no para que busque el archivo en la máquina remota y no en el controller
+- name: uncompress wp
+  unarchive:
+    src: "{{ wp_download_path }}"
+    dest: "{{ wp_webserver_path }}"
+    copy: no
 
-- name: Copy wp-config.php
-  template: src=wp-config.php.j2 dest="{{ wp_webserver_path }}/wordpress/wp-config.php"
+- name: Configure wp settings file
+  template:
+    src: wp-config.php.j2
+    dest: "{{ wp_webserver_wordpress_path }}/wp-config.php"
+...

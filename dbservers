@@ -1,2 +1,2 @@
 [dbservers]
-dbserver ansible_host=192.168.33.14 ansible_user=root
+dbserver ansible_host=192.168.0.104 ansible_user=root ansible_python_interpreter=/usr/bin/python3

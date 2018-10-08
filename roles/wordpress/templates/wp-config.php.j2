@@ -22,7 +22,7 @@ define('DB_NAME', '{{ dbname }}');
 define('DB_USER', '{{ dbuser }}');
 
 /** Tu contraseña de MySQL */
-define('DB_PASSWORD', '{{ dbpasswd }}');
+define('DB_PASSWORD', '{{ dbpass }}');
 
 /** Host de MySQL (es muy probable que no necesites cambiarlo) */
 define('DB_HOST', '{{ dbhost }}');
@@ -59,7 +59,7 @@ define('NONCE_SALT', 'pon aquí tu frase aleatoria'); // Cambia esto por tu fras
  * Cambia el prefijo si deseas instalar multiples blogs en una sola base de datos.
  * Emplea solo números, letras y guión bajo.
  */
-$table_prefix  = 'wp_';
+$table_prefix  = '{{ wp_table_prefix }}';
 
 
 /**
@@ -69,13 +69,13 @@ $table_prefix  = 'wp_';
  * Se recomienda encarecidamente a los desarrolladores de temas y plugins que usen WP_DEBUG
  * en sus entornos de desarrollo.
  */
-define('WP_DEBUG', true);
+define('WP_DEBUG', false);
 
 /* ¡Eso es todo, deja de editar! Feliz blogging */
 
 /** WordPress absolute path to the Wordpress directory. */
 if ( !defined('ABSPATH') )
-        define('ABSPATH', dirname(__FILE__) . '/');
+	define('ABSPATH', dirname(__FILE__) . '/');
 
 /** Sets up WordPress vars and included files. */
 require_once(ABSPATH . 'wp-settings.php');

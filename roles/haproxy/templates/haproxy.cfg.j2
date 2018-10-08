@@ -1,28 +1,49 @@
 global
-  log /dev/log  local0
-  log /dev/log  local1 notice
-  stats socket {{ haproxy_socket }} level admin
-  chroot {{ haproxy_chroot }}
-  user {{ haproxy_user }}
-  group {{ haproxy_group }}
-  daemon
+	log {{ haproxy_log_device }}	{{ haproxy_log_0 }}
+	log {{ haproxy_log_device }}	{{ haproxy_log_1 }}
+	chroot {{ haproxy_chroot }}
+	stats socket {{ haproxy_socket}} mode 660 level admin expose-fd listeners
+	stats timeout {{ haproxy_stats_timeout }}
+	user {{ haproxy_user }}
+	group {{ haproxy_group }}
+	{{ haproxy_mode }}
+
+	# Default SSL material locations
+	ca-base {{ haproxy_ssl_certs }}
+	crt-base {{ haproxy_ssl_private }}
+
+	# Default ciphers to use on SSL-enabled listening sockets.
+	# For more information, see ciphers(1SSL). This list is from:
+	#  https://hynek.me/articles/hardening-your-web-servers-ssl-ciphers/
+	# An alternative list with additional directives can be obtained from
+	#  https://mozilla.github.io/server-side-tls/ssl-config-generator/?server=haproxy
+	ssl-default-bind-ciphers {{ haproxy_ssl_ciphers }}
+	ssl-default-bind-options {{ haproxy_ssl_options }}
 
 defaults
-  log global
-  mode  http
-  option  httplog
-  option  dontlognull
-  timeout connect 5000
-  timeout client 50000
-  timeout server 50000
+	log	global
+	mode	http
+	option	httplog
+	option	dontlognull
+        timeout connect 5000
+        timeout client  50000
+        timeout server  50000
+	errorfile 400 /etc/haproxy/errors/400.http
+	errorfile 403 /etc/haproxy/errors/403.http
+	errorfile 408 /etc/haproxy/errors/408.http
+	errorfile 500 /etc/haproxy/errors/500.http
+	errorfile 502 /etc/haproxy/errors/502.http
+	errorfile 503 /etc/haproxy/errors/503.http
+	errorfile 504 /etc/haproxy/errors/504.http
 
-errorfile 400 /etc/haproxy/errors/400.http
-errorfile 403 /etc/haproxy/errors/403.http
-errorfile 408 /etc/haproxy/errors/408.http
-errorfile 500 /etc/haproxy/errors/500.http
-errorfile 502 /etc/haproxy/errors/502.http
-errorfile 503 /etc/haproxy/errors/503.http
-errorfile 504 /etc/haproxy/errors/504.http
+{% if haproxy_stats_enabled %}
+listen stats
+    bind :{{ haproxy_stats_port }}
+    stats enable
+    stats uri {{ haproxy_stats_url }}
+    stats realm Strictly\ Private
+    stats auth {{ haproxy_stats_user }}:{{ haproxy_stats_pass }}
+{% endif %}
 
 frontend {{ haproxy_frontend_name }}
     bind {{ haproxy_frontend_bind_address }}:{{ haproxy_frontend_port }}
@@ -31,14 +52,10 @@ frontend {{ haproxy_frontend_name }}
 
 backend {{ haproxy_backend_name }}
     mode {{ haproxy_backend_mode }}
-    stats enable
-    stats uri /haproxy?stats
-    stats realm Strictly\ Private
-    stats auth root:root
     balance {{ haproxy_backend_balance_method }}
-    balance roundrobin
+    option httpchk {{ haproxy_backend_httpchk }}
     option httpclose
     option forwardfor
     {% for backend in haproxy_backend_servers %}
-        server {{ backend.name }} {{ backend.address }} check
+        server {{ backend.name }} {{ backend.address }} check port {{ haproxy_backend_check_port }}
     {% endfor %}

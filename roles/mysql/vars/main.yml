@@ -1,12 +1,13 @@
 ---
-env:
-  RUNLEVEL: 1
-
 mysql_packages:
-  - python-selinux
   - mysql-server
-  - python-mysqldb
+  - mysql-common
+# IMPORTANT: this role does NOT work with ansible <2.8.0
+# python3-pip is required to install PyMySQL, which is required by mysql_user (as of ansible 2.8.0)
+  - python3-pip
+
+mysql_python_modules:
+  - PyMySQL
 
 mysql_service: mysql
-
-mysql_conf_dir: "/etc/mysql/"
+...

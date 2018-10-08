@@ -1,6 +1,9 @@
 ---
-
-wp_version: 4.7.5
-wp_url: "https://es.wordpress.org/wordpress-{{ wp_version }}-es_ES.zip"
+wp_version: 4.9.8
+wp_download_url: "https://es.wordpress.org/wordpress-{{ wp_version }}-es_ES.zip"
 wp_download_path: "/tmp/wordpress-{{ wp_version }}.zip"
-wp_webserver_path: "{{ webserver_root }}"
+wp_webserver_path: "{{ webserver_base }}"
+wp_webserver_wordpress_path: "{{ webserver_base }}/wordpress"
+
+wp_table_prefix: "wordpress_"
+...
